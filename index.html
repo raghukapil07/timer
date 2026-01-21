@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ULTIMATE_HACKER_TIMER</title>
+    <style>
+        :root { --neon-red: #ff0000; --neon-green: #00ff41; --bg: #000000; }
+        body, html { margin: 0; padding: 0; background: var(--bg); overflow: hidden; height: 100vh; font-family: 'Courier New', monospace; }
+        
+        /* Matrix Canvas - Brightness Increased */
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.4; }
+
+        #ui-layer { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* Bright Red Neon Heading */
+        .header {
+            color: var(--neon-red);
+            font-size: 4.5rem;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-red), 0 0 30px var(--neon-red), 0 0 60px var(--neon-red);
+            margin-bottom: 20px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        /* Large White Timer for Readability */
+        #countdown {
+            font-size: 10vw;
+            color: #fff;
+            text-shadow: 0 0 20px #fff, 0 0 40px var(--neon-green);
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        .stats-box {
+            border: 2px solid var(--neon-red);
+            padding: 20px;
+            margin-top: 40px;
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 20px var(--neon-red);
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            width: 600px;
+        }
+
+        @keyframes pulse {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0.8; transform: scale(1.02); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="m"></canvas>
+    
+    <div id="ui-layer">
+        <div class="header">PADHLO BHAIYO BAS <br> ITNE TIME OR PADHLO</div>
+        <div id="countdown">0000:00:00</div>
+        
+        <div class="stats-box">
+            <div>> SYSTEM STATUS: CRITICAL_STUDY_MODE</div>
+            <div>> DEADLINE: 11_MARCH_2026_12:00_PM</div>
+            <div>> DECRYPTING_HOURS: <span id="hex">0x0</span></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('m');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = "010101010101BINARYHACKER0101";
+        const drops = Array(Math.floor(canvas.width / 20)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ff41"; // Bright Green
+            ctx.font = "20px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * 20, drops[i] * 20);
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        const target = new Date("March 11, 2026 12:00:00").getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = target - now;
+            if (diff <= 0) { document.getElementById("countdown").innerText = "MISSION_START"; return; }
+
+            const h = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(4, '0');
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            const s = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+            document.getElementById("countdown").innerText = `${h}:${m}:${s}`;
+            document.getElementById("hex").innerText = "0x" + diff.toString(16).toUpperCase();
+        }
+
+        setInterval(drawMatrix, 50);
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
